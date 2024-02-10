@@ -22,6 +22,10 @@ module.exports = function (Topics) {
 
         const tid = await db.incrObjectField('global', 'nextTid');
 
+        // Determine if topic is created anonymously
+        const isAnonymous = data.isAnonymous || false;
+        const uid = isAnonymous ? -1 : data.uid;
+
         let topicData = {
             tid: tid,
             uid: data.uid,
@@ -33,6 +37,7 @@ module.exports = function (Topics) {
             lastposttime: 0,
             postcount: 0,
             viewcount: 0,
+            isAnonymous: isAnonymous, // store anonymous status
         };
 
         if (Array.isArray(data.tags) && data.tags.length) {
@@ -46,7 +51,7 @@ module.exports = function (Topics) {
         const timestampedSortedSetKeys = [
             'topics:tid',
             `cid:${topicData.cid}:tids`,
-            `cid:${topicData.cid}:uid:${topicData.uid}:tids`,
+            `cid:${topicData.cid}:uid:${uid}:tids`, // Use the modified uid allowing anonymous for sorted set
         ];
 
         const scheduled = timestamp > Date.now();
@@ -62,7 +67,8 @@ module.exports = function (Topics) {
                 `cid:${topicData.cid}:tids:posts`,
                 `cid:${topicData.cid}:tids:views`,
             ], 0, topicData.tid),
-            user.addTopicIdToUser(topicData.uid, topicData.tid, timestamp),
+            // Skip adding topic id to user if anonymous
+            uid !== -1 ? user.addTopicIdToUser(uid, topicData.tid, timestamp) : Promise.resolve(),
             db.incrObjectField(`category:${topicData.cid}`, 'topic_count'),
             db.incrObjectField('global', 'topicCount'),
             Topics.createTags(data.tags, topicData.tid, timestamp),
