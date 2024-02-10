@@ -14,13 +14,15 @@ const utils = require('../utils');
 module.exports = function (Posts) {
     Posts.create = async function (data) {
         // This is an internal method, consider using Topics.reply instead
-        const { uid } = data;
-        const { tid } = data;
-        const content = data.content.toString();
+        let {uid, tid, isAnonymous} = data;
+        const content = data.content.toString(); // extract isAnonymous from data
         const timestamp = data.timestamp || Date.now();
         const isMain = data.isMain || false;
 
-        if (!uid && parseInt(uid, 10) !== 0) {
+        // Modify UID if post is anonymous
+        if (isAnonymous) {
+            uid = -1; // set uid to -1 for anonymous posts
+        } else if (!uid && parseInt(uid, 10) !== 0) {
             throw new Error('[[error:invalid-uid]]');
         }
 
@@ -31,7 +33,7 @@ module.exports = function (Posts) {
         const pid = await db.incrObjectField('global', 'nextPid');
         let postData = {
             pid: pid,
-            uid: uid,
+            uid: uid, // use modified UID, -1 for anonymous
             tid: tid,
             content: content,
             timestamp: timestamp,
@@ -43,7 +45,10 @@ module.exports = function (Posts) {
         if (data.ip && meta.config.trackIpPerPost) {
             postData.ip = data.ip;
         }
-        if (data.handle && !parseInt(uid, 10)) {
+        // handle anonymous posting
+        if (isAnonymous) {
+            postData.handle = 'Anonymous';
+        } else if (data.handle && !parseInt(uid, 10)) {
             postData.handle = data.handle;
         }
 
