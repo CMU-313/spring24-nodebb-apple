@@ -14,6 +14,8 @@ const privileges = require('../privileges');
 
 module.exports = function (Posts) {
     Posts.getUserInfoForPosts = async function (uids, uid) {
+        // Filter out the anonymous UID (-1) to bypass processing for anonymously made posts
+        uids = uids.filter(uid => uid !== -1);
         const [userData, userSettings, signatureUids] = await Promise.all([
             getUserData(uids, uid),
             user.getMultipleUserSettings(uids),
@@ -23,37 +25,52 @@ module.exports = function (Posts) {
         const groupsMap = await getGroupsMap(userData);
 
         userData.forEach((userData, index) => {
-            userData.signature = validator.escape(String(userData.signature || ''));
-            userData.fullname = userSettings[index].showfullname ? validator.escape(String(userData.fullname || '')) : undefined;
-            userData.selectedGroups = [];
-
-            if (meta.config.hideFullname) {
-                userData.fullname = undefined;
+            if (userData.uid === -1) {
+                // Call helper function to anonymize user data if the post is anonymous
+                anonymizeUserData(userData);
+            } else {
+                userData.signature = validator.escape(String(userData.signature || ''));
+                userData.fullname = userSettings[index].showfullname ? validator.escape(String(userData.fullname || '')) : undefined;
+                userData.selectedGroups = [];
+                if (meta.config.hideFullname) {
+                    userData.fullname = undefined;
+                }
             }
         });
 
         const result = await Promise.all(userData.map(async (userData) => {
-            const [isMemberOfGroups, signature, customProfileInfo] = await Promise.all([
-                checkGroupMembership(userData.uid, userData.groupTitleArray),
-                parseSignature(userData, uid, uidsSignatureSet),
-                plugins.hooks.fire('filter:posts.custom_profile_info', { profile: [], uid: userData.uid }),
-            ]);
-
-            if (isMemberOfGroups && userData.groupTitleArray) {
-                userData.groupTitleArray.forEach((userGroup, index) => {
-                    if (isMemberOfGroups[index] && groupsMap[userGroup]) {
-                        userData.selectedGroups.push(groupsMap[userGroup]);
-                    }
-                });
+            if (userData.uid !== -1) {
+                // Process non anonymous data
+                const [isMemberOfGroups, signature, customProfileInfo] = await Promise.all([
+                    checkGroupMembership(userData.uid, userData.groupTitleArray),
+                    parseSignature(userData, uid, uidsSignatureSet),
+                    plugins.hooks.fire('filter:posts.custom_profile_info', { profile: [], uid: userData.uid }),
+                ]);
+                if (isMemberOfGroups && userData.groupTitleArray) {
+                    userData.groupTitleArray.forEach((userGroup, index) => {
+                        if (isMemberOfGroups[index] && groupsMap[userGroup]) {
+                            userData.selectedGroups.push(groupsMap[userGroup]);
+                        }
+                    });
+                }
+                userData.signature = signature;
+                userData.custom_profile_info = customProfileInfo.profile;
             }
-            userData.signature = signature;
-            userData.custom_profile_info = customProfileInfo.profile;
-
             return await plugins.hooks.fire('filter:posts.modifyUserInfo', userData);
         }));
         const hookResult = await plugins.hooks.fire('filter:posts.getUserInfoForPosts', { users: result });
         return hookResult.users;
     };
+
+    function anonymizeUserData(userData) {
+        // set user fields to default for anonymous posts
+        userData.username = 'Anonymous';
+        userData.userslug = 'anonymous';
+        userData.signature = '';
+        userData.fullname = undefined;
+        userData.selectedGroups = [];
+        userData.custom_profile_info = [];
+    }
 
     Posts.overrideGuestHandle = function (postData, handle) {
         if (meta.config.allowGuestHandles && postData && postData.user && parseInt(postData.uid, 10) === 0 && handle) {
