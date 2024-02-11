@@ -24,18 +24,18 @@
                     <tr>
                         <th align="left">
                             <a href="https://github.com/CMU-313/spring24-nodebb-apple/commits?author=cathyxfeiyang&since=2024-01-20T00:00:00-05:00&until=2024-03-29T23:59:00-05:00">
-                            Commit: 5
+                            Commit: 6
                             </a>
                         </th>
                     </tr>
                     <tr>
                         <th align="left">
-                            Addition: 21
+                            Addition: 59
                         </th>
                     </tr>
                     <tr>
                         <th align="left">
-                            Deletion: 10
+                            Deletion: 31
                         </th>
                     <tr>
                     <tr>
