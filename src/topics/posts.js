@@ -48,6 +48,24 @@ module.exports = function (Topics) {
         if (!postData.length) {
             return [];
         }
+        // Anonymization logic
+        postData.forEach((post) => {
+            if (post.uid === -1) {
+                post.username = 'Anonymous';
+                post.user = {
+                    uid: -1,
+                    username: 'Anonymous',
+                    userslug: 'anonymous',
+                    picture: 'spring24-nodebb-apple/test/files/test.png', //add a default anonymous picture just using nodeBB logo for now
+                        // should we anonymize anything else?
+                };
+                    // remove sensitive data here
+                    // something along the lines of
+                    // post.ip = undefined;
+                    // but this might not be that much of a concern
+                    // depending on how serious we are about anonymization
+            }
+        });
         let replies = postData;
         if (topicData.mainPid && start === 0) {
             postData[0].index = 0;
