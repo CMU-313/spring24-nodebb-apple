@@ -27,14 +27,6 @@ module.exports = function (User) {
         'status', 'flags', 'followerCount', 'followingCount', 'cover:url',
         'cover:position', 'groupTitle', 'mutedUntil', 'mutedReason',
     ];
-    function anonymizePost(post) {
-        // Set a generic username for anonymous posts
-        post.username = "Anonymous";
-        post.userslug = "anonymous";
-        post.userpicture = ""; // Consider setting a default anonymous user picture if desired
-        post.uid = -1; // Ensure the UID is set to -1
-
-    }
 
     User.guestData = {
         uid: 0,
