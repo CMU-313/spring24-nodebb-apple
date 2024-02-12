@@ -6,14 +6,19 @@ const privileges = require('../privileges');
 
 module.exports = function (User) {
     User.isReadyToPost = async function (uid, cid) {
+        if (parseInt(uid, 10) === -1) return;
         await isReady(uid, cid, 'lastposttime');
     };
 
+
     User.isReadyToQueue = async function (uid, cid) {
+        if (parseInt(uid, 10) === -1) return;
         await isReady(uid, cid, 'lastqueuetime');
     };
 
+
     async function isReady(uid, cid, field) {
+        if (parseInt(uid, 10) === -1) return;
         if (parseInt(uid, 10) === 0) {
             return;
         }
@@ -59,6 +64,7 @@ module.exports = function (User) {
     }
 
     User.onNewPostMade = async function (postData) {
+        if (parseInt(postData.uid, 10) === -1) return; 
         // For scheduled posts, use "action" time. It'll be updated in related cron job when post is published
         const lastposttime = postData.timestamp > Date.now() ? Date.now() : postData.timestamp;
 
@@ -70,6 +76,7 @@ module.exports = function (User) {
     };
 
     User.addPostIdToUser = async function (postData) {
+        if (parseInt(postData.uid, 10) === -1) return; 
         await db.sortedSetsAdd([
             `uid:${postData.uid}:posts`,
             `cid:${postData.cid}:uid:${postData.uid}:pids`,
@@ -78,6 +85,9 @@ module.exports = function (User) {
     };
 
     User.updatePostCount = async (uids) => {
+        uids = Array.isArray(uids) ? uids : [uids];
+        uids = uids.filter(uid => parseInt(uid, 10) !== -1);
+        if (!uids.length) return;
         uids = Array.isArray(uids) ? uids : [uids];
         const exists = await User.exists(uids);
         uids = uids.filter((uid, index) => exists[index]);
@@ -91,8 +101,10 @@ module.exports = function (User) {
     };
 
     User.incrementUserPostCountBy = async function (uid, value) {
+        if (parseInt(uid, 10) === -1) return;
         return await incrementUserFieldAndSetBy(uid, 'postcount', 'users:postcount', value);
     };
+
 
     User.incrementUserReputationBy = async function (uid, value) {
         return await incrementUserFieldAndSetBy(uid, 'reputation', 'users:reputation', value);
