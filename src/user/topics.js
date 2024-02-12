@@ -8,6 +8,10 @@ module.exports = function (User) {
     };
 
     User.addTopicIdToUser = async function (uid, tid, timestamp) {
+        if (parseInt(uid, 10) === -1) {
+            // If UID is -1, the topic is anonymous, and no action is needed
+            return;
+        }
         await Promise.all([
             db.sortedSetAdd(`uid:${uid}:topics`, timestamp, tid),
             User.incrementUserFieldBy(uid, 'topiccount', 1),
