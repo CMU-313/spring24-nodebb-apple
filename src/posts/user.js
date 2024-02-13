@@ -15,7 +15,6 @@ const privileges = require('../privileges');
 
 module.exports = function (Posts) {
     Posts.getUserInfoForPosts = async function (uids, uid) {
-        // Filter out the anonymous UID (-1) early to avoid unnecessary processing
         uids = uids.filter(uid => uid !== -1);
 
         const [userData, userSettings, signatureUids] = await Promise.all([
