@@ -64,7 +64,7 @@ module.exports = function (User) {
     }
 
     User.onNewPostMade = async function (postData) {
-        if (parseInt(postData.uid, 10) === -1) return; 
+        if (parseInt(postData.uid, 10) === -1) return;
         // For scheduled posts, use "action" time. It'll be updated in related cron job when post is published
         const lastposttime = postData.timestamp > Date.now() ? Date.now() : postData.timestamp;
 
@@ -76,7 +76,7 @@ module.exports = function (User) {
     };
 
     User.addPostIdToUser = async function (postData) {
-        if (parseInt(postData.uid, 10) === -1) return; 
+        if (parseInt(postData.uid, 10) === -1) return;
         await db.sortedSetsAdd([
             `uid:${postData.uid}:posts`,
             `cid:${postData.cid}:uid:${postData.uid}:pids`,

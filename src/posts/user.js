@@ -39,7 +39,7 @@ module.exports = function (Posts) {
                 }
 
                 if (userData.groupTitleArray) {
-                    userData.groupTitleArray.forEach((userGroup, index) => {
+                    userData.groupTitleArray.forEach((userGroup) => { // Removed groupIndex
                         if (groupsMap[userGroup]) {
                             userData.selectedGroups.push(groupsMap[userGroup]);
                         }
@@ -48,10 +48,12 @@ module.exports = function (Posts) {
             }
         });
 
+
+
         const result = await Promise.all(userData.map(async (userData) => {
             if (userData.uid !== -1) {
                 // Non-anonymous user data processing
-                const [isMemberOfGroups, signature, customProfileInfo] = await Promise.all([
+                const [signature, customProfileInfo] = await Promise.all([
                     checkGroupMembership(userData.uid, userData.groupTitleArray),
                     parseSignature(userData, uid, uidsSignatureSet),
                     plugins.hooks.fire('filter:posts.custom_profile_info', { profile: [], uid: userData.uid }),
