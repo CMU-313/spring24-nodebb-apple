@@ -27,7 +27,6 @@ module.exports = function (Posts) {
 
         userData.forEach((userData, index) => {
             if (userData.uid === -1) {
-                // Handle anonymous user data
                 anonymizeUserData(userData);
             } else {
                 userData.signature = validator.escape(String(userData.signature || ''));
