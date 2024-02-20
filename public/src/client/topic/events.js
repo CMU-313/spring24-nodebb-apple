@@ -237,7 +237,6 @@ define('forum/topic/events', [
         el.find('[component="post/endorse/on"]').toggleClass('hidden', !data.isEndorsed);
         el.find('[component="post/endorse/off"]').toggleClass('hidden', data.isEndorsed);
     }
-    
     function togglePostVote(data) {
         const post = $('[data-pid="' + data.post.pid + '"]');
         post.find('[component="post/upvote"]').filter(function (index, el) {
