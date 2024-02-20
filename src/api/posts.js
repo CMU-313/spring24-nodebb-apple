@@ -333,3 +333,17 @@ postsAPI.restoreDiff = async (caller, data) => {
     const edit = await posts.diffs.restore(data.pid, data.since, caller.uid, apiHelpers.buildReqObject(caller));
     websockets.in(`topic_${edit.topic.tid}`).emit('event:post_edited', edit);
 };
+
+postsAPI.endorse = async function (caller, data) {
+    if (typeof (data) !== 'object') {
+        throw new Error('Types do not match');
+    }
+    return await apiHelpers.postCommand(caller, 'endorse', 'endorsed', '', data);
+};
+
+postsAPI.unendorse = async function (caller, data) {
+    if (typeof (data) !== 'object') {
+        throw new Error('Types do not match');
+    }
+    return await apiHelpers.postCommand(caller, 'unendorse', 'endorsed', '', data);
+};
