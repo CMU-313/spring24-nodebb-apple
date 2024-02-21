@@ -10,9 +10,9 @@
 
     <!-- BEGIN posts -->
     <!-- IF posts.votes --> 
-    <div class="stats endorsed" style="border: 3px solid green; background-color: #d1f9d5; text-align: center; color: #333; height: 25px; margin-top: 20px; font-weight: bold;">
+    <div class="stats endorsed" style="border: 3px solid blue; background-color: #004466; text-align: center; color: white; height: 25px; margin-top: 20px; font-weight: bold; border-radius: 5px;">
         ENDORSED
-    </div>
+    </div>    
     <!-- ENDIF posts.votes --> 
     <!-- END posts -->
 </div>
