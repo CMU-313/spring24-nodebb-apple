@@ -6,21 +6,18 @@
     </a>
 </li>
 <li <!-- IF posts.deleted -->hidden<!-- ENDIF posts.deleted -->>
-    <a component="post/delete" role="menuitem" tabindex="-1" href="#"
-        class="<!-- IF posts.deleted -->hidden<!-- ENDIF posts.deleted -->">
+    <a component="post/delete" role="menuitem" tabindex="-1" href="#" class="<!-- IF posts.deleted -->hidden<!-- ENDIF posts.deleted -->">
         <div class="inline menu-icon"><i class="fa fa-fw fa-trash-o"></i></div> <span>[[topic:delete]]</span>
     </a>
 </li>
 <li <!-- IF !posts.deleted -->hidden<!-- ENDIF !posts.deleted -->>
-    <a component="post/restore" role="menuitem" tabindex="-1" href="#"
-        class="<!-- IF !posts.deleted -->hidden<!-- ENDIF !posts.deleted -->">
+    <a component="post/restore" role="menuitem" tabindex="-1" href="#" class="<!-- IF !posts.deleted -->hidden<!-- ENDIF !posts.deleted -->">
         <div class="inline menu-icon"><i class="fa fa-fw fa-history"></i></div> <span>[[topic:restore]]</span>
     </a>
 </li>
 <!-- IF posts.display_purge_tools -->
 <li <!-- IF !posts.deleted -->hidden<!-- ENDIF !posts.deleted -->>
-    <a component="post/purge" role="menuitem" tabindex="-1" href="#"
-        class="<!-- IF !posts.deleted -->hidden<!-- ENDIF !posts.deleted -->">
+    <a component="post/purge" role="menuitem" tabindex="-1" href="#" class="<!-- IF !posts.deleted -->hidden<!-- ENDIF !posts.deleted -->">
         <span class="menu-icon"><i class="fa fa-fw fa-eraser"></i></span> [[topic:purge]]
     </a>
 </li>
@@ -67,59 +64,42 @@
 {{{end}}}
 
 <!-- IF !posts.deleted -->
-<!-- IF posts.display_history -->
-<li>
-    <a component="post/view-history" role="menuitem" tabindex="-1" href="#">
-        <span class="menu-icon"><i class="fa fa-fw fa-history"></i></span> [[topic:view-history]]
-    </a>
-</li>
-<!-- END -->
+    <!-- IF posts.display_history -->
+    <li>
+        <a component="post/view-history" role="menuitem" tabindex="-1" href="#">
+            <span class="menu-icon"><i class="fa fa-fw fa-history"></i></span> [[topic:view-history]]
+        </a>
+    </li>
+    <!-- END -->
 
-{{{ if config.loggedIn }}}
-<li>
-    <a component="post/bookmark" role="menuitem" tabindex="-1" href="#" data-bookmarked="{posts.bookmarked}">
-        <span class="menu-icon">
-            <i component="post/bookmark/on"
-                class="fa fa-fw fa-heart <!-- IF !posts.bookmarked -->hidden<!-- ENDIF !posts.bookmarked -->"></i>
-            <i component="post/bookmark/off"
-                class="fa fa-fw fa-heart-o <!-- IF posts.bookmarked -->hidden<!-- ENDIF posts.bookmarked -->"></i>
-        </span>
-        <span class="bookmark-text">[[topic:bookmark]]</span>
-        <span component="post/bookmark-count" class="bookmarkCount badge"
-            data-bookmarks="{posts.bookmarks}">{posts.bookmarks}</span>&nbsp;
-    </a>
-</li>
-<li>
-    <a component="post/endorse" role="menuitem" tabindex="-1" href="#" data-endorsed="{posts.endorsed}">
-        <span class="menu-icon">
-            <i component="post/endorse/on"
-                class="fa fa-fw fa-heart <!-- IF !posts.endorsed -->hidden<!-- ENDIF !posts.endorsed -->"></i>
-            <i component="post/endorse/off"
-                class="fa fa-fw fa-heart-o <!-- IF posts.endorsed -->hidden<!-- ENDIF posts.endorsed -->"></i>
-        </span>
-        <span class="endorse-text">Endorse</span>
-        <!-- <span component="post/endorse-count" class="endorseCount badge" data-endorsements="{posts.endorsements}">{posts.endorsements}</span>&nbsp; -->
-    </a>
-</li>
-{{{ end }}}
+    {{{ if config.loggedIn }}}
+    <li>
+        <a component="post/bookmark" role="menuitem" tabindex="-1" href="#" data-bookmarked="{posts.bookmarked}">
+            <span class="menu-icon">
+                <i component="post/bookmark/on" class="fa fa-fw fa-heart <!-- IF !posts.bookmarked -->hidden<!-- ENDIF !posts.bookmarked -->"></i>
+                <i component="post/bookmark/off" class="fa fa-fw fa-heart-o <!-- IF posts.bookmarked -->hidden<!-- ENDIF posts.bookmarked -->"></i>
+            </span>
+            <span class="bookmark-text">[[topic:bookmark]]</span>
+            <span component="post/bookmark-count" class="bookmarkCount badge" data-bookmarks="{posts.bookmarks}">{posts.bookmarks}</span>&nbsp;
+        </a>
+    </li>
+    {{{ end }}}
 
-<li>
-    <a role="menuitem" tabindex="-1" href="#" data-clipboard-text="{posts.absolute_url}">
-            i class="fa fa-fw fa-link"></i> [[topic:copy-permalink]]
-    </a>
-</li>
+    <li>
+        <a role="menuitem" tabindex="-1" href="#" data-clipboard-text="{posts.absolute_url}">
+            <i class="fa fa-fw fa-link"></i> [[topic:copy-permalink]]
+        </a>
+    </li>
 
-<!-- IF postSharing.length -->
-<!-- IF config.loggedIn -->
-<li class="divider"></li><!-- ENDIF config.loggedIn -->
-<li class="dropdown-header">[[topic:share_this_post]]</li>
-<!-- ENDIF postSharing.length -->
-{{{each postSharing}}}
-<li>
-    <a role="menuitem" component="share/{postSharing.id}" tabindex="-1" href="#"><span class="menu-icon"><i
-                class="fa fa-fw {postSharing.class}"></i></span> {postSharing.name}</a>
-</li>
-{{{end}}}
+    <!-- IF postSharing.length -->
+    <!-- IF config.loggedIn --><li class="divider"></li><!-- ENDIF config.loggedIn -->
+    <li class="dropdown-header">[[topic:share_this_post]]</li>
+    <!-- ENDIF postSharing.length -->
+    {{{each postSharing}}}
+        <li>
+            <a role="menuitem" component="share/{postSharing.id}" tabindex="-1" href="#"><span class="menu-icon"><i class="fa fa-fw {postSharing.class}"></i></span> {postSharing.name}</a>
+        </li>
+    {{{end}}}
 <!-- ENDIF !posts.deleted -->
 
 {{{ if posts.display_flag_tools }}}

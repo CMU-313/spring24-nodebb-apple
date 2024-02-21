@@ -12,11 +12,8 @@ const meta = require('../meta');
 const plugins = require('../plugins');
 const privileges = require('../privileges');
 
-
 module.exports = function (Posts) {
     Posts.getUserInfoForPosts = async function (uids, uid) {
-        uids = uids.filter(uid => uid !== -1);
-
         const [userData, userSettings, signatureUids] = await Promise.all([
             getUserData(uids, uid),
             user.getMultipleUserSettings(uids),
@@ -26,59 +23,37 @@ module.exports = function (Posts) {
         const groupsMap = await getGroupsMap(userData);
 
         userData.forEach((userData, index) => {
-            if (userData.uid === -1) {
-                anonymizeUserData(userData);
-            } else {
-                userData.signature = validator.escape(String(userData.signature || ''));
-                userData.fullname = userSettings[index].showfullname ? validator.escape(String(userData.fullname || '')) : undefined;
-                userData.selectedGroups = [];
+            userData.signature = validator.escape(String(userData.signature || ''));
+            userData.fullname = userSettings[index].showfullname ? validator.escape(String(userData.fullname || '')) : undefined;
+            userData.selectedGroups = [];
 
-                if (meta.config.hideFullname) {
-                    userData.fullname = undefined;
-                }
-
-                if (userData.groupTitleArray) {
-                    userData.groupTitleArray.forEach((userGroup) => { // Removed groupIndex
-                        if (groupsMap[userGroup]) {
-                            userData.selectedGroups.push(groupsMap[userGroup]);
-                        }
-                    });
-                }
+            if (meta.config.hideFullname) {
+                userData.fullname = undefined;
             }
         });
 
-
-
         const result = await Promise.all(userData.map(async (userData) => {
-            if (userData.uid !== -1) {
-                // Non-anonymous user data processing
-                const [signature, customProfileInfo] = await Promise.all([
-                    checkGroupMembership(userData.uid, userData.groupTitleArray),
-                    parseSignature(userData, uid, uidsSignatureSet),
-                    plugins.hooks.fire('filter:posts.custom_profile_info', { profile: [], uid: userData.uid }),
-                ]);
+            const [isMemberOfGroups, signature, customProfileInfo] = await Promise.all([
+                checkGroupMembership(userData.uid, userData.groupTitleArray),
+                parseSignature(userData, uid, uidsSignatureSet),
+                plugins.hooks.fire('filter:posts.custom_profile_info', { profile: [], uid: userData.uid }),
+            ]);
 
-                userData.signature = signature;
-                userData.custom_profile_info = customProfileInfo.profile;
+            if (isMemberOfGroups && userData.groupTitleArray) {
+                userData.groupTitleArray.forEach((userGroup, index) => {
+                    if (isMemberOfGroups[index] && groupsMap[userGroup]) {
+                        userData.selectedGroups.push(groupsMap[userGroup]);
+                    }
+                });
             }
+            userData.signature = signature;
+            userData.custom_profile_info = customProfileInfo.profile;
 
             return await plugins.hooks.fire('filter:posts.modifyUserInfo', userData);
         }));
-
         const hookResult = await plugins.hooks.fire('filter:posts.getUserInfoForPosts', { users: result });
         return hookResult.users;
     };
-
-
-    function anonymizeUserData(userData) {
-        userData.username = 'Anonymous';
-        userData.userslug = 'anonymous';
-        userData.signature = '';
-        userData.fullname = undefined;
-        userData.selectedGroups = [];
-        userData.custom_profile_info = [];
-    }
-
 
     Posts.overrideGuestHandle = function (postData, handle) {
         if (meta.config.allowGuestHandles && postData && postData.user && parseInt(postData.uid, 10) === 0 && handle) {

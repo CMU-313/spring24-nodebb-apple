@@ -35,13 +35,4 @@
         "icon" : "fa-question",
         "order": 3
     }
-    {
-        "name": "Bookmarked",
-        "description": "Your Boomarked Posts",
-        "descriptionParsed": "<p>Your Boomarked Posts</p>\n",
-        "bgColor": "#e95c5a",
-        "color": "#ffffff",
-        "icon" : "fa-question",
-        "order": 5
-    }
 ]
