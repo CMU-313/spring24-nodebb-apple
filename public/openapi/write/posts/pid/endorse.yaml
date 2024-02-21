@@ -2,7 +2,7 @@ put:
   tags:
     - posts
   summary: make a post endorsed
-  description: This operation marks a post as endorsed.
+  description: This operation endorses a post.
   parameters:
     - in: path
       name: pid
