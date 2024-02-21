@@ -245,4 +245,44 @@ User.addInterstitials = function (callback) {
     callback();
 };
 
+
+/**
+ * Checks if user is an instructor
+ * @param {number} uid
+ * @returns {Promise<boolean>}
+ */
+User.isInstructor = async function (uid) {
+    if (typeof uid !== 'number') {
+        return false;
+    }
+
+    const accounttype = await User.getAccountTypeByUid(uid);
+    const check = accounttype === 'instructor';
+
+    if (typeof check !== 'boolean') {
+        throw new TypeError('Expected check to be a boolean');
+    }
+
+    return check;
+};
+
+/**
+ * Checks account type by their uid
+ * @param {number} uid
+ * @returns {Promise<object>}
+ */
+User.getAccountTypeByUid = async function (uid) {
+    if (typeof uid !== 'number') {
+        throw new Error('[[error:invalid-username]]');
+    }
+
+    const accounttype = User.getUserField(uid, 'accounttype');
+
+    if (typeof accounttype !== 'object') {
+        throw new TypeError('Expected accounttype to be a object');
+    }
+
+    return accounttype;
+};
+
 require('../promisify')(User);

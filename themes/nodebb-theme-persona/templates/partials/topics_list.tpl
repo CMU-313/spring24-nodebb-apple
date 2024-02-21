@@ -79,6 +79,7 @@
             <!-- IF !reputation:disabled -->
             <span class="human-readable-number" title="{topics.votes}">{topics.votes}</span><br />
             <small>[[global:votes]]</small>
+            <small>ENDORSEMENTS</small>
             <!-- END -->
         </div>
 
