@@ -245,12 +245,6 @@ User.addInterstitials = function (callback) {
     callback();
 };
 
-
-/**
- * Checks if user is an instructor
- * @param {number} uid
- * @returns {Promise<boolean>}
- */
 User.isInstructor = async function (uid) {
     if (typeof uid !== 'number') {
         return false;
@@ -266,11 +260,6 @@ User.isInstructor = async function (uid) {
     return check;
 };
 
-/**
- * Checks account type by their uid
- * @param {number} uid
- * @returns {Promise<object>}
- */
 User.getAccountTypeByUid = async function (uid) {
     if (typeof uid !== 'number') {
         throw new Error('[[error:invalid-username]]');

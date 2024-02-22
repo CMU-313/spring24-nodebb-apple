@@ -224,7 +224,6 @@ const privsCategories: PrivsCategories = {
             this.isUserAllowedTo(privilege, cid, uid) as boolean,
         ]);
 
-        // For Endorse Answers Only.
         let isInstructor;
         if (privilege === 'posts:upvote') {
             isInstructor = await user.isInstructor(uid);

@@ -176,7 +176,6 @@ const privsCategories = {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 this.isUserAllowedTo(privilege, cid, uid),
             ]);
-            // For Endorse Answers Only.
             let isInstructor;
             if (privilege === 'posts:upvote') {
                 isInstructor = yield user_1.default.isInstructor(uid);
