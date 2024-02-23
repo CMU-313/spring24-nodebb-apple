@@ -245,6 +245,8 @@ User.addInterstitials = function (callback) {
     callback();
 };
 
+
+
 User.isInstructor = async function (uid) {
     if (typeof uid !== 'number') {
         return false;
@@ -259,6 +261,7 @@ User.isInstructor = async function (uid) {
 
     return check;
 };
+
 
 User.getAccountTypeByUid = async function (uid) {
     if (typeof uid !== 'number') {
