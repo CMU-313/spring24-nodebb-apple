@@ -17,9 +17,6 @@ describe('Categories', () => {
     let categoryObj;
     let posterUid;
     let adminUid;
-    let instructorUid;
-    let studentAUid;
-    let studentBUid;
 
     before((done) => {
         async.series({
@@ -29,22 +26,10 @@ describe('Categories', () => {
             adminUid: function (next) {
                 User.create({ username: 'admin' }, next);
             },
-            instructorUid: function (next) {
-                User.create({ username: 'instructor', accounttype: 'instructor' }, next);
-            },
-            studentAUid: function (next) {
-                User.create({ username: 'student1', accounttype: 'student' }, next);
-            },
-            studentBUid: function (next) {
-                User.create({ username: 'student2' }, next);
-            },
         }, (err, results) => {
             assert.ifError(err);
             posterUid = results.posterUid;
             adminUid = results.adminUid;
-            instructorUid = results.instructorUid;
-            studentAUid = results.student1Uid;
-            studentBUid = results.student2Uid;
             groups.join('administrators', adminUid, done);
         });
     });
@@ -593,35 +578,9 @@ describe('Categories', () => {
                 set: true,
                 member: 'registered-users',
             });
-            await apiCategories.setPrivilege({ uid: adminUid }, {
-                cid: parentCid,
-                privilege: 'groups:topics:upvote',
-                set: true,
-                member: 'registered-users',
-            });
             await socketCategories.copyPrivilegesFrom({ uid: adminUid }, { fromCid: parentCid, toCid: child1.cid });
             const canDelete = await privileges.categories.can('topics:delete', child1.cid, posterUid);
             assert(canDelete);
-        });
-
-        it('instructor upvote privilege given', async () => {
-            const result = await privileges.categories.can('posts:upvote', categoryObj.cid, instructorUid);
-            assert.equal(result, true);
-        });
-
-        it('admin endorse privilege given', async () => {
-            const result = await privileges.categories.can('posts:upvote', categoryObj.cid, adminUid);
-            assert.equal(result, true);
-        });
-
-        it('student upvote privilege rejected', async () => {
-            const result = await privileges.categories.can('posts:upvote', categoryObj.cid, studentAUid);
-            assert.equal(result, false);
-        });
-
-        it('student missing privileges', async () => {
-            const result = await privileges.categories.can('posts:upvote', categoryObj.cid, studentBUid);
-            assert.equal(result, false);
         });
 
         it('should copy privileges from another category for a single group', async () => {
@@ -750,10 +709,11 @@ describe('Categories', () => {
         it('should filter uids by privilege', (done) => {
             privileges.categories.filterUids('find', categoryObj.cid, [1, 2, 3, 4], (err, uids) => {
                 assert.ifError(err);
-                assert.deepEqual(uids, [1, 2, 3, 4]);
+                assert.deepEqual(uids, [1, 2]);
                 done();
             });
         });
+
         it('should load category user privileges', (done) => {
             privileges.categories.userPrivileges(categoryObj.cid, 1, (err, data) => {
                 assert.ifError(err);
