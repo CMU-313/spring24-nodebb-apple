@@ -245,4 +245,16 @@ User.addInterstitials = function (callback) {
     callback();
 };
 
+
+
+User.isInstructor = async function (uid) {
+    const accounttype = await User.getAccountTypeByUid(uid);
+    return accounttype === 'instructor';
+};
+
+
+User.getAccountTypeByUid = async function (uid) {
+    return User.getUserField(uid, 'accounttype');
+};
+
 require('../promisify')(User);
