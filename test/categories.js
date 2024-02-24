@@ -754,7 +754,6 @@ describe('Categories', () => {
                 done();
             });
         });
-
         it('should load category user privileges', (done) => {
             privileges.categories.userPrivileges(categoryObj.cid, 1, (err, data) => {
                 assert.ifError(err);
