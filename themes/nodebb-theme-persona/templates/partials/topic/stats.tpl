@@ -1,7 +1,7 @@
 <div class="stats text-muted">
     <!-- BEGIN posts -->
     <!-- IF posts.votes --> 
-    <div class="stats endorsed" style="border: 3px solid blue; background-color: #004466; text-align: center; color: white; height: 25px; margin-top: 20px; font-weight: bold; border-radius: 5px;">
+    <div class="stats endorsed" style="background-color: #004466; text-align: center; color: white; height: 25px; margin-top: 20px; font-weight: bold; border-radius: 5px;">
         ENDORSED
     </div>    
     <!-- ENDIF posts.votes --> 
