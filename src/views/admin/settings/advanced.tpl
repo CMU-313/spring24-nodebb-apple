@@ -46,7 +46,7 @@
             </div>
             <div class="form-group">
                 <label for="powered-by">[[admin/settings/advanced:headers.powered-by]]</label>
-                <input class="form-control" id="powered-by" type="text" placeholder="NodeBB" data-field="powered-by" /><br />
+                <input class="form-control" id="powered-by" type="text" placeholder="NodeBB 1.0" data-field="powered-by" /><br />
             </div>
             <div class="form-group">
                 <label for="access-control-allow-origin">[[admin/settings/advanced:headers.acao]]</label>

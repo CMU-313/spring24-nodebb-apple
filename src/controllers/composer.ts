@@ -82,7 +82,7 @@ type PostFnType = (data: ComposerData) => Promise<QueueResult>;
 export async function post(req: Request<object, object, ComposerData> & { uid: number }, res: Response): Promise<void> {
     const { body } = req;
     const data: ComposerData = {
-        uid: req.uid,
+        uid: 0,
         req: req,
         timestamp: Date.now(),
         content: body.content,

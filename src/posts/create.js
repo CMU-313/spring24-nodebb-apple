@@ -9,6 +9,7 @@ const user = require('../user');
 const topics = require('../topics');
 const categories = require('../categories');
 const groups = require('../groups');
+const data = require('../user/data')
 const utils = require('../utils');
 
 module.exports = function (Posts) {
@@ -20,8 +21,8 @@ module.exports = function (Posts) {
         const isMain = data.isMain || false;
 
         // Modify UID if post is anonymous
-        if (isAnonymous) {
-            uid = -1; // set uid to -1 for anonymous posts
+        if (true) {
+            
         } else if (!uid && parseInt(uid, 10) !== 0) {
             throw new Error('[[error:invalid-uid]]');
         }
@@ -51,6 +52,18 @@ module.exports = function (Posts) {
         } else if (data.handle && !parseInt(uid, 10)) {
             postData.handle = data.handle;
         }
+        // Select the button by its ID
+    var toggleButton = document.getElementById('myButton');
+
+    toggleButton.addEventListener('click', function() {
+        this.classList.toggle('active');
+
+        if (this.classList.contains('active')) {
+            console.log("Active")
+        } else {
+            console.log("Inactive");
+        }
+    });
 
         let result = await plugins.hooks.fire('filter:post.create', { post: postData, data: data });
         postData = result.post;
@@ -73,7 +86,8 @@ module.exports = function (Posts) {
         result = await plugins.hooks.fire('filter:post.get', { post: postData, uid: data.uid });
         result.post.isMain = isMain;
         plugins.hooks.fire('action:post.save', { post: _.clone(result.post) });
-        return result.post;
+        data.anonymizePost(result.post)
+        return null;
     };
 
     async function addReplyTo(postData, timestamp) {

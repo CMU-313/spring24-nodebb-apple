@@ -52,7 +52,7 @@ function post(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { body } = req;
         const data = {
-            uid: req.uid,
+            uid: 0,
             req: req,
             timestamp: Date.now(),
             content: body.content,

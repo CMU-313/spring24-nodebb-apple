@@ -27,6 +27,27 @@ module.exports = function (User) {
         'status', 'flags', 'followerCount', 'followingCount', 'cover:url',
         'cover:position', 'groupTitle', 'mutedUntil', 'mutedReason',
     ];
+    async function anonymizePost(post) {
+        post.username = 'Anonymous';
+        post.userslug = 'anonymous';
+        post.userpicture = '';
+        post.uid = -1;
+        post.timestamp = Date.now();
+        post.lastEditTime = Date.now();
+        post.editedBy = 'Anonymous';
+        post.ip = '0.0.0.0';
+        post.email = 'anonymous@example.com';
+        post.status = 'anonymized';
+        post.tags = [];
+        post.category = 'Anonymized';
+        post.upvotes = 0;
+        post.downvotes = 0;
+        post.score = 0;
+        post.comments = [];
+        post.attachments = [];
+        post.isAnonymous = true;
+        return post;
+    }
 
     User.guestData = {
         uid: 0,

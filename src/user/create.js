@@ -10,6 +10,7 @@ const plugins = require('../plugins');
 const groups = require('../groups');
 const meta = require('../meta');
 const analytics = require('../analytics');
+const data = require('../user/data')
 
 module.exports = function (User) {
     User.create = async function (data) {
@@ -187,6 +188,7 @@ module.exports = function (User) {
         let numTries = 0;
         let { username } = userData;
         while (true) {
+            
             /* eslint-disable no-await-in-loop */
             const exists = await meta.userOrGroupExists(username);
             if (!exists) {

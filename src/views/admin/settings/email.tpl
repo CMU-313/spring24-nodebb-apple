@@ -17,7 +17,7 @@
                 <p class="help-block">
                     [[admin/settings/email:from-help]]
                 </p>
-                <input type="text" class="form-control input-lg" id="email:from_name" data-field="email:from_name" placeholder="NodeBB" /><br />
+                <input type="text" class="form-control input-lg" id="email:from_name" data-field="email:from_name" placeholder="NodeBB 1.0" /><br />
             </div>
 
             <div class="checkbox">

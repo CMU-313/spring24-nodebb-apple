@@ -16,7 +16,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">NodeBB</a>
+                <a class="navbar-brand" href="#">NodeBB 1.0</a>
             </div>
 
             <ul class="nav navbar-nav">
