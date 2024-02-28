@@ -74,8 +74,17 @@ define('forum/topic', [
         hooks.fire('action:topic.loaded', ajaxify.data);
     };
 
-    // Instructed to write by ChatGPT, written by ChatGPT
+    /**
+     * Instructed to write by ChatGPT, written by ChatGPT
+     * Attaches a click event listener to a resolve button and updates the topic's resolution status.
+     * @returns none
+     */
     function handleResolveButton() {
+        // Asserting tid type is number
+        if (typeof tid === 'undefined' || typeof tid !== 'number') {
+            console.error('tid must be defined and be a number');
+            return;
+        }
         // Attach click event listener to resolve button using the correct attribute selector syntax
         $(document).on('click', '[component="topic/resolve"]', function () {
             // Assuming 'tid' is defined elsewhere in your script and accessible here

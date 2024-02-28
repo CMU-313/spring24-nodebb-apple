@@ -42,9 +42,23 @@ Topics.reply = async (req, res) => {
     }
 };
 
-// Code instructed to write and written by ChatGPT
-// Function to resolve a topic
+/**
+ * Code instructed and written by ChatGPT
+ * Function to resolve a topic, takes the topic ID (tid) from the request parameters and the user ID (uid) from the request object.
+ * @param {*} req - The request object from Express.js, containing the parameters and user information.
+ * @param {*} res - The response object from Express.js, used to send back the formatted API response.
+ */
 Topics.resolve = async (req, res) => {
+    // Asserting that req.params and req.uid are of expected types.
+    if (typeof req !== 'object' || typeof res !== 'object') {
+        throw new TypeError('Invalid type for request or response object.');
+    }
+    if (typeof req.params !== 'object' || !req.params.tid || typeof req.params.tid !== 'string') {
+        throw new TypeError('Request parameters are not as expected. "tid" should be a string and not empty.');
+    }
+    if (typeof req.uid !== 'string' && typeof req.uid !== 'number') {
+        throw new TypeError('User ID (uid) must be a string or number.');
+    }
     // Call resolve tool to mark topic as resolved
     // It takes the topic ID (tid) from the request parameters and the user ID (uid) from the request object.
     await topics.tools.resolve(req.params.tid, req.uid);

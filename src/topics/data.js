@@ -8,8 +8,17 @@ const utils = require('../utils');
 const translator = require('../translator');
 const plugins = require('../plugins');
 
-// Instructed to add 'resolve' field to int fields by ChatGPT
-// Add resolve field to int fields of topic
+/**
+ * Instructed to add 'resolve' field to intFields constant by ChatGPT
+ * An array of strings representing property names.
+ * Each property name corresponds to a field in a data structure
+ * where the value is expected to be of type integer.
+ * 
+ * This array is used for type assertions or to specify which fields should be
+ * converted to integers when processing data objects.
+ * 
+ * @type {string[]}
+ */
 const intFields = [
     'tid', 'cid', 'uid', 'mainPid', 'postcount',
     'viewcount', 'postercount', 'deleted', 'locked', 'pinned',
