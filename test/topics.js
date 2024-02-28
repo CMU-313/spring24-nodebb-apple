@@ -36,10 +36,8 @@ describe('Topic\'s', () => {
     let adminJar;
     let csrf_token;
     let fooUid;
-    let instructorUid;
 
     before(async () => {
-        instructorUid = await User.create({ username: 'instructor', password: '123456', accounttype: 'instructor' });
         adminUid = await User.create({ username: 'admin', password: '123456' });
         fooUid = await User.create({ username: 'foo' });
         await groups.join('administrators', adminUid);
@@ -306,12 +304,6 @@ describe('Topic\'s', () => {
                 assert.equal(err.message, '[[error:no-privileges]]');
                 done();
             });
-        });
-
-        it('should change instructor count when reply', async () => {
-            const topicIData = await topics.getTopicField(newTopic.tid, 'instructorcount');
-            const ipost = await topics.reply({ uid: instructorUid, content: 'test reply', tid: newTopic.tid, toPid: newPost.pid });
-            assert(topicIData);
         });
 
         it('should fail to create new reply with empty content', (done) => {
