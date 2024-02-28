@@ -12,6 +12,7 @@ const middleware = require('../../middleware');
 const uploadsController = require('../uploads');
 
 const Topics = module.exports;
+module.exports = Topics;
 
 Topics.get = async (req, res) => {
     helpers.formatApiResponse(200, res, await api.topics.get(req, req.params));
@@ -39,6 +40,17 @@ Topics.reply = async (req, res) => {
     } finally {
         await db.deleteObjectField('locks', id);
     }
+};
+
+// Code instructed to write and written by ChatGPT
+// Function to resolve a topic
+Topics.resolve = async (req, res) => {
+    // Call resolve tool to mark topic as resolved
+    // It takes the topic ID (tid) from the request parameters and the user ID (uid) from the request object.
+    await topics.tools.resolve(req.params.tid, req.uid);
+    // Send a success response to the client.
+    // It formats the response as per the API's standard, with a 200 OK status code.
+    helpers.formatApiResponse(200, res);
 };
 
 async function lockPosting(req, error) {

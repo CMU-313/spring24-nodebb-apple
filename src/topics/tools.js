@@ -23,6 +23,28 @@ module.exports = function (Topics) {
         return await toggleDelete(tid, uid, false);
     };
 
+    // Code instructed and written by ChatGPT
+    // Resolves a topic after checking for topic existence and privileges
+    topicTools.resolve = async function (tid, uid) {
+        const topicData = await topics.getTopicFields(tid, ['uid']);
+        // check if topic exists
+        if (!topicData) {
+            throw new Error('[[error:no-topic]]');
+        }
+        const isOwner = parseInt(topicData.uid, 10) === parseInt(uid, 10);
+        const isAdmin = await user.isAdministrator(uid);
+        const isMod = await user.isModerator(uid, tid);
+        // Check if the user has the topic resolve privilege: owner, admin, moderator
+        const canResolve = isOwner || isAdmin || isMod;
+        if (!canResolve) {
+            throw new Error('[[error:no-privileges]]');
+        }
+        // Proceed to mark the topic as resolved since the user has the required privilege or role
+        await topics.setTopicField(tid, 'resolve', 1);
+        topicData.resolve = 1;
+        return topicData;
+    };
+
     async function toggleDelete(tid, uid, isDelete) {
         const topicData = await Topics.getTopicData(tid);
         if (!topicData) {
