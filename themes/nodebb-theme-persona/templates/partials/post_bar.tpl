@@ -17,4 +17,26 @@
     <!-- IMPORT partials/thread_tools.tpl -->
     </div>
     <!-- IMPORT partials/topic/reply-button.tpl -->
+
+    <!-- Code written by ChatGPT -->
+    <!-- Resolve button only available to users with correct privileges to resolve the topic -->
+    <!-- IF privileges.can_resolve -->
+        <button 
+        component="topic/resolve" 
+        class="btn btn-sm btn-default" 
+        type="button" 
+        {{{if resolve}}}disabled{{{end}}}>
+        <!-- Button content changes based on resolution state -->
+        {{{if resolve}}}
+            <!-- Displayed if the topic is already resolved -->
+            <i class="fa fa-fw fa-check"></i>
+            <span class="visible-sm-inline visible-md-inline visible-lg-inline">Already Resolved</span>
+        {{{else}}}
+            <!-- Displayed if the topic is not resolved yet -->
+            <i class="fa"></i>
+            <span class="visible-sm-inline visible-md-inline visible-lg-inline">Mark as Resolved</span>
+        {{{end}}}
+    </button> 
+    <!-- ENDIF privileges.can_resolve -->
+
 </div>
