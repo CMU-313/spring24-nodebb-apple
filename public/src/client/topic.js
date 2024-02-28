@@ -63,6 +63,10 @@ define('forum/topic', [
         addRepliesHandler();
         addPostsPreviewHandler();
 
+        // instructed to add by ChatGPT, written by ChatGPT
+        // call handling function to handle click of resolve button
+        handleResolveButton();
+
         handleBookmark(tid);
 
         $(window).on('scroll', utils.debounce(updateTopicTitle, 250));
@@ -71,6 +75,28 @@ define('forum/topic', [
 
         hooks.fire('action:topic.loaded', ajaxify.data);
     };
+
+    // instructed to add by ChatGPT, written by ChatGPT
+    // handle click events for resolving topics
+    function handleResolveButton() {
+        // attach event listener to the resolve button
+        $(document).on('click', '[component="topic/resolve"]', function() {
+            // Sends a PUT request to the server to mark a topic, identified by 'tid', as resolved.
+            // The resolve parameter is set to 1, indicating the action to resolve the topic.
+            api.put('/topics/' + tid + '/resolve', { resolve: 1 })
+                .then(function(response) {
+                    // Upon successful resolution, refreshes the page to reflect changes.
+                    location.reload();
+                })
+                .catch(function(error) {
+                    // If the PUT request fails, displays an error message to the user.
+                    // It uses a custom alert system to show the error message or a default message if none is provided.
+                    alerts.error(error.message || 'Failed to update topic resolution status.');
+                });
+        });
+    }
+
+
 
     function handleTopicSearch() {
         require(['mousetrap'], (mousetrap) => {
