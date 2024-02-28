@@ -16,6 +16,7 @@
                         {{{each icons}}}{@value}{{{end}}}
                     </span>
                     <span component="topic/title">{title}</span>
+                    <!-- Code written by ChatGPT -->
                     <!-- IF resolve -->
                         <small style="text-align: right; color: green;">Resolved</small>
                     <!-- ELSE -->
