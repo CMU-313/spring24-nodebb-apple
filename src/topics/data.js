@@ -8,11 +8,13 @@ const utils = require('../utils');
 const translator = require('../translator');
 const plugins = require('../plugins');
 
+// Instructed to add by ChatGPT
+// Add resolve field to int fields of topic
 const intFields = [
     'tid', 'cid', 'uid', 'mainPid', 'postcount',
     'viewcount', 'postercount', 'deleted', 'locked', 'pinned',
     'pinExpiry', 'timestamp', 'upvotes', 'downvotes', 'lastposttime',
-    'deleterUid',
+    'deleterUid','resolve',
 ];
 
 module.exports = function (Topics) {

@@ -38,6 +38,7 @@ module.exports = function (Topics) {
             postcount: 0,
             viewcount: 0,
             isAnonymous: isAnonymous, // store anonymous status
+            resolve: 0, // Add resolve field to topic's data, defaults to 0 for unresolved (1 for resolved)
         };
 
         if (Array.isArray(data.tags) && data.tags.length) {
@@ -226,7 +227,9 @@ module.exports = function (Topics) {
             topicInfo,
         ] = await Promise.all([
             posts.getUserInfoForPosts([postData.uid], uid),
-            Topics.getTopicFields(tid, ['tid', 'uid', 'title', 'slug', 'cid', 'postcount', 'mainPid', 'scheduled']),
+            // Instructed to add resolve field by ChatGPT
+            // Add resolve field to topic's field getter
+            Topics.getTopicFields(tid, ['tid', 'uid', 'resolve', 'title', 'slug', 'cid', 'postcount', 'mainPid', 'scheduled']),
             Topics.addParentPosts([postData]),
             Topics.syncBacklinks(postData),
             posts.parsePost(postData),

@@ -31,6 +31,18 @@ Topics.create = async (req, res) => {
     }
 };
 
+// Code instructed to write and written by ChatGPT
+// Function to resolve a topic
+Topics.resolve = async (req, res) => {
+    // Call resolve tool to mark topic as resolved
+    // It takes the topic ID (tid) from the request parameters and the user ID (uid) from the request object.
+    await topics.tools.resolve(req.params.tid, req.uid);
+    // Send a success response to the client.
+    // It formats the response as per the API's standard, with a 200 OK status code.
+    helpers.formatApiResponse(200, res);
+};
+
+
 Topics.reply = async (req, res) => {
     const id = await lockPosting(req, '[[error:already-posting]]');
     try {

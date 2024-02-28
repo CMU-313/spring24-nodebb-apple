@@ -213,6 +213,10 @@ TopicObjectSlim:
           type: number
         postercount:
           type: number
+        # Instructed to make this addition by ChatGPT, code by copilot autocomplete
+        # Add resolve field to topic schema
+        resolve:
+          type: number
         scheduled:
           type: number
         deleted:

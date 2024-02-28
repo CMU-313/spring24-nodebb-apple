@@ -48,7 +48,8 @@ privsTopics.get = async function (tid, uid) {
         'posts:view_deleted': privData['posts:view_deleted'] || isAdministrator,
         read: privData.read || isAdministrator,
         purge: (privData.purge && (isOwner || isModerator)) || isAdministrator,
-
+        // add privilege for resolve topics, only topic owner, admin, or mod
+        can_resolve: isOwner || isAdminOrMod,
         view_thread_tools: editable || deletable,
         editable: editable,
         deletable: deletable,
