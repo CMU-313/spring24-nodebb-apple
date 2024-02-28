@@ -23,6 +23,45 @@ module.exports = function (Topics) {
         return await toggleDelete(tid, uid, false);
     };
 
+    /**
+     * Code instructed and written by ChatGPT
+     * Marks a topic as resolved if the user has the appropriate privileges.
+     * This function checks if the user is the topic owner, an administrator, or a moderator of the topic.
+     * If the user has the required privilege, the topic is marked as resolved.
+     * 
+     * @param {number|string} tid - The topic ID to be marked as resolved.
+     * @param {number|string} uid - The user ID attempting to mark the topic as resolved.
+     * @returns {Promise<Object>} A promise that resolves with the updated topic data including the resolve status.
+     * @throws {Error} If the topic does not exist or the user lacks the necessary privileges.
+     */
+    topicTools.resolve = async function (tid, uid) {
+        // Assert parameter types
+        if (isNaN(Number(tid)) || isNaN(Number(uid))) {
+            throw new TypeError('tid and uid must be numbers or string representations of numbers');
+        }
+        const topicData = await topics.getTopicFields(tid, ['uid']);
+        // check if topic exists
+        if (!topicData) {
+            throw new Error('[[error:no-topic]]');
+        }
+        const isOwner = parseInt(topicData.uid, 10) === parseInt(uid, 10);
+        const isAdmin = await user.isAdministrator(uid);
+        const isMod = await user.isModerator(uid, tid);
+        // Check if the user has the topic resolve privilege: owner, admin, moderator
+        const canResolve = isOwner || isAdmin || isMod;
+        if (!canResolve) {
+            throw new Error('[[error:no-privileges]]');
+        }
+        // Proceed to mark the topic as resolved since the user has the required privilege or role
+        await topics.setTopicField(tid, 'resolve', 1);
+        topicData.resolve = 1;
+        // Assert return type
+        if (typeof topicData !== 'object' || topicData === null) {
+            throw new TypeError('Expected topicData to be an object');
+        }
+        return topicData;
+    };
+
     async function toggleDelete(tid, uid, isDelete) {
         const topicData = await Topics.getTopicData(tid);
         if (!topicData) {

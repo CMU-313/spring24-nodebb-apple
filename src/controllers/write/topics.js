@@ -12,6 +12,7 @@ const middleware = require('../../middleware');
 const uploadsController = require('../uploads');
 
 const Topics = module.exports;
+module.exports = Topics;
 
 Topics.get = async (req, res) => {
     helpers.formatApiResponse(200, res, await api.topics.get(req, req.params));
@@ -39,6 +40,31 @@ Topics.reply = async (req, res) => {
     } finally {
         await db.deleteObjectField('locks', id);
     }
+};
+
+/**
+ * Code instructed and written by ChatGPT
+ * Function to resolve a topic, takes the topic ID (tid) from the request parameters and the user ID (uid) from the request object.
+ * @param {*} req - The request object from Express.js, containing the parameters and user information.
+ * @param {*} res - The response object from Express.js, used to send back the formatted API response.
+ */
+Topics.resolve = async (req, res) => {
+    // Asserting that req.params and req.uid are of expected types.
+    if (typeof req !== 'object' || typeof res !== 'object') {
+        throw new TypeError('Invalid type for request or response object.');
+    }
+    if (typeof req.params !== 'object' || !req.params.tid || typeof req.params.tid !== 'string') {
+        throw new TypeError('Request parameters are not as expected. "tid" should be a string and not empty.');
+    }
+    if (typeof req.uid !== 'string' && typeof req.uid !== 'number') {
+        throw new TypeError('User ID (uid) must be a string or number.');
+    }
+    // Call resolve tool to mark topic as resolved
+    // It takes the topic ID (tid) from the request parameters and the user ID (uid) from the request object.
+    await topics.tools.resolve(req.params.tid, req.uid);
+    // Send a success response to the client.
+    // It formats the response as per the API's standard, with a 200 OK status code.
+    helpers.formatApiResponse(200, res);
 };
 
 async function lockPosting(req, error) {

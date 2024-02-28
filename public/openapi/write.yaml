@@ -110,6 +110,10 @@ paths:
     $ref: 'write/topics.yaml'
   /topics/{tid}:
     $ref: 'write/topics/tid.yaml'
+  # Instructed to add by ChatGPT, code copied from lines above
+  # Defines path to an API endpoint for resolving a topic
+  /topics/{tid}/resolve:
+    $ref: 'write/topics/tid/resolve.yaml'
   /topics/{tid}/state:
     $ref: 'write/topics/tid/state.yaml'
   /topics/{tid}/lock:
