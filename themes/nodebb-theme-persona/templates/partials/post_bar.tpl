@@ -8,7 +8,15 @@
         <i class="fa fa-fw fa-inbox"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"></span>
     </button>
     <!-- ENDIF loggedIn -->
-
+    <!-- IF canLockPost -->
+    <button component="post/lock" data-tid="123" class="btn btn-sm btn-default" title="Lock Topic">
+        <i class="fa fa-fw fa-lock"></i> Lock
+    </button>
+    <!-- ELSE -->
+    <button component="post/unlock" data-tid="123" class="btn btn-sm btn-default" title="Unlock Topic" style="display:none;">
+        <i class="fa fa-fw fa-unlock"></i> Unlock
+    </button>
+    <!-- ENDIF canLockPost -->
     <!-- IMPORT partials/topic/watch.tpl -->
 
     <!-- IMPORT partials/topic/sort.tpl -->

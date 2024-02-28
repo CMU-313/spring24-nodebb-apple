@@ -114,6 +114,15 @@ privsPosts.filter = async function (privilege, pids, uid) {
     return data ? data.pids : null;
 };
 
+privsPosts.canLock = async function(pid, uid) {
+    const isOwner = await posts.isOwner(pid, uid);
+    const isAdminOrMod = await privsPosts.isAdminOrMod(pid, uid); // Assumes this function checks if the user is an admin or moderator
+
+    // Allow locking if the user is the owner, admin, or moderator
+    return isOwner || isAdminOrMod;
+};
+
+
 privsPosts.canEdit = async function (pid, uid) {
     const results = await utils.promiseParallel({
         isAdmin: user.isAdministrator(uid),

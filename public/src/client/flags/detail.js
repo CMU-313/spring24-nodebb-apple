@@ -33,6 +33,16 @@ define('forum/flags/detail', [
                 break;
             }
 
+            // case for lock post
+            case 'lock-post':
+                postAction('lock', api.put, `/posts/${ajaxify.data.target.pid}/state`);
+                break;
+            // case for unlock post
+            case 'unlock-post':
+                postAction('unlock', api.put, `/posts/${ajaxify.data.target.pid}/state`);
+                break;
+
+
             case 'appendNote':
                 api.post(`/flags/${ajaxify.data.flagId}/notes`, {
                     note: noteEl.value,
