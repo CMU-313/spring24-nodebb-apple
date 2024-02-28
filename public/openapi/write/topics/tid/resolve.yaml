@@ -1,0 +1,46 @@
+# File instructed to write by ChatGPT, code written by ChatGPT
+# defines an API endpoint for resolving a topic
+put:
+  tags:
+    - topics
+  summary: Resolve a topic
+  description: Marks a topic as resolved.
+  operationId: resolveTopic
+  parameters:
+    - in: path
+      name: tid
+      required: true
+      schema:
+        type: number
+      description: The topic identifier that is to be marked as resolved.
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            resolved:
+              type: boolean
+              description: A boolean flag to indicate the resolve status. True to mark the topic as resolved, false to mark it as unresolved.
+          required:
+            - resolved
+  responses:
+    '200':
+      description: Topic successfully resolved
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+    '400':
+      description: Bad request. Possible reasons: missing parameters or incorrect values.
+    '404':
+      description: Topic not found.
+    '401':
+      description: Unauthorized. User is not logged in or lacks the necessary permissions to resolve the topic.
+    '500':
+      description: Internal server error. An error occurred while attempting to resolve the topic.
