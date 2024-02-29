@@ -24,10 +24,29 @@ const helpers = require('./helpers');
 const socketPosts = require('../src/socket.io/posts');
 const socketTopics = require('../src/socket.io/topics');
 const apiTopics = require('../src/api/topics');
+// const topicTools = require('../src/topics/tools');
 
 const requestType = util.promisify((type, url, opts, cb) => {
     request[type](url, opts, (err, res, body) => cb(err, { res: res, body: body }));
 });
+
+// describe('topicTools.resolve', () => {
+//     // Mock topics.getTopicFields to simulate the user being the owner of the topic
+//     topics.getTopicFields = async tid => ({ uid: 1 }); // Simulate the owner's uid for the topic
+//     // Mock topics.setTopicField to simulate setting the topic field without actual database operation
+//     topics.setTopicField = async (tid, field, value) => {
+//     };
+//     it('should allow topic owner to resolve the topic', async () => {
+//         const tid = 1; // Example topic ID
+//         const uid = 1; // Owner's user ID
+//         try {
+//             const result = await topicTools.resolve(tid, uid);
+//             assert.strictEqual(result.resolve, 1, 'Topic should be marked as resolved');
+//         } catch (error) {
+//             assert.fail(`An unexpected error occurred: ${error.message}`);
+//         }
+//     });
+// });
 
 describe('Topic\'s', () => {
     let topic;
@@ -605,7 +624,7 @@ describe('Topic\'s', () => {
         });
     });
 
-    describe('tools/delete/restore/purge', () => {
+    describe('tools/delete/restore/purge/resolve', () => {
         let newTopic;
         let followerUid;
         let moveCid;
@@ -677,6 +696,25 @@ describe('Topic\'s', () => {
             const isLocked = await topics.isLocked(newTopic.tid);
             assert(!isLocked);
         });
+
+        // Test written with help of copilot autocomplete
+        // Add tests for resolve functionality
+        it('should resolve topic', async () => {
+            await apiTopics.resolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+            const resolved = await topics.getTopicField(newTopic.tid, 'resolve');
+            assert.strictEqual(resolved, 1);
+        });
+
+        it('should not resolve topic if user has no privileges', async () => {
+            try {
+                await apiTopics.resolve({ uid: fooUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+                // If the resolve function doesn't throw, force the test to fail
+                assert.fail('Expected error not thrown');
+            } catch (error) {
+                // Check that the error message matches the expected no-privileges error
+                assert.strictEqual(error.message, '[[error:no-privileges]]');
+            }
+        });        
 
         it('should pin topic', async () => {
             await apiTopics.pin({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
