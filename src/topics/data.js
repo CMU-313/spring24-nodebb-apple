@@ -7,12 +7,16 @@ const categories = require('../categories');
 const utils = require('../utils');
 const translator = require('../translator');
 const plugins = require('../plugins');
-
+/**
+ * Instructed to add 'resolve' field to intFields constant by ChatGPT
+ * intFields: array of strings representing topic field names, topic fields have integer value
+ * intFields used to parse integer fields from topic object
+ */
 const intFields = [
     'tid', 'cid', 'uid', 'mainPid', 'postcount',
     'viewcount', 'postercount', 'deleted', 'locked', 'pinned',
     'pinExpiry', 'timestamp', 'upvotes', 'downvotes', 'lastposttime',
-    'deleterUid',
+    'deleterUid', 'resolve',
 ];
 
 module.exports = function (Topics) {
