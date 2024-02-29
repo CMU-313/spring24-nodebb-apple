@@ -22,6 +22,9 @@ define('forum/topic/events', [
         'event:topic_deleted': threadTools.setDeleteState,
         'event:topic_restored': threadTools.setDeleteState,
         'event:topic_purged': onTopicPurged,
+        // Instructed to add by ChatGPT, code written by ChatGPT
+        // create event for topic resolved
+        'event:topic_resolved': onTopicResolved,
 
         'event:topic_locked': threadTools.setLockedState,
         'event:topic_unlocked': threadTools.setLockedState,
@@ -92,6 +95,12 @@ define('forum/topic/events', [
         ) {
             ajaxify.go('category/' + ajaxify.data.category.slug, null, true);
         }
+    }
+
+    // Instructed to add by ChatGPT, code written by ChatGPT
+    // Event handler for when a topic is resolved
+    function onTopicResolved(data) {
+        console.log('Topic resolved', data);
     }
 
     function onTopicMoved(data) {

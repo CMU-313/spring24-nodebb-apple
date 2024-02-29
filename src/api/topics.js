@@ -65,6 +65,14 @@ topicsAPI.create = async function (caller, data) {
     return result.topicData;
 };
 
+// Instructed to add by ChatGPT to fulfill testing purposes, code written by ChatGPT
+// Set up API to resolve topic
+topicsAPI.resolve = async function (caller, data) {
+    await doTopicAction('resolve', 'event:topic_resolved', caller, {
+        tids: data.tids,
+    });
+};
+
 topicsAPI.reply = async function (caller, data) {
     if (!data || !data.tid || (meta.config.minimumPostLength !== 0 && !data.content)) {
         throw new Error('[[error:invalid-data]]');
