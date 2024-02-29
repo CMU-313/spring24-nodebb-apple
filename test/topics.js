@@ -714,7 +714,7 @@ describe('Topic\'s', () => {
                 // Check that the error message matches the expected no-privileges error
                 assert.strictEqual(error.message, '[[error:no-privileges]]');
             }
-        });        
+        });
 
         it('should pin topic', async () => {
             await apiTopics.pin({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
