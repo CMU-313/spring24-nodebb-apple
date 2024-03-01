@@ -9,77 +9,84 @@
     </button>
     <!-- ENDIF loggedIn -->
 
-    <!-- Here, we add the lock/unlock buttons based on the user's privilege to lock/unlock the post -->
+    <!-- Conditional display of lock/unlock buttons based on user's privilege -->
     <!-- IF canLockPost -->
     <button component="post/lock" class="btn btn-sm btn-default" title="[[topic:lock_post]]">
-        <i class="fa fa-fw fa-lock"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"> Lock</span>
+        <i class="fa fa-fw fa-lock"></i> Lock
     </button>
     <!-- ELSE -->
-    <button component="post/unlock" class="btn btn-sm btn-default" title="[[topic:unlock_post]]">
-        <i class="fa fa-fw fa-unlock"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"> Unlock</span>
+    <button component="post/unlock" class="btn btn-sm btn-default" title="[[topic:unlock_post]]" style="display: none;">
+        <i class="fa fa-fw fa-unlock"></i> Unlock
     </button>
     <!-- ENDIF canLockPost -->
 
     <!-- IMPORT partials/topic/watch.tpl -->
-
     <!-- IMPORT partials/topic/sort.tpl -->
 
     <div class="inline-block">
-    <!-- IMPORT partials/thread_tools.tpl -->
+        <!-- IMPORT partials/thread_tools.tpl -->
     </div>
     <!-- IMPORT partials/topic/reply-button.tpl -->
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script is loading...');
-
-    // Directly attempting to use ajaxify.data.tid, assuming it's available
-    const topicId = typeof ajaxify !== 'undefined' ? ajaxify.data.tid : null;
-    console.log('Current topic ID:', topicId);
-
-    if (!topicId) {
-        console.error('Topic ID could not be determined.');
-        return; // Exit if the topic ID wasn't found
-    }
-
-    const lockButton = document.querySelector('[component="post/lock"]');
-    const unlockButton = document.querySelector('[component="post/unlock"]');
-
-    function toggleLockState(isLocked) {
-        lockButton.style.display = isLocked ? 'none' : 'inline-block';
-        unlockButton.style.display = isLocked ? 'inline-block' : 'none';
-    }
-
-    // Function to handle the fetch request and button state toggle
-    function handleFetch(method) {
-        const requestUrl = "/api/v3/topics/" + topicId + "/lock";
-        console.log("Making request to:", requestUrl);
-
-        fetch(requestUrl, {
-            method: method,
-            headers: {
-                'x-csrf-token': config.csrf_token,
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include'
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log(`Topic ${method === 'PUT' ? 'locked' : 'unlocked'} successfully`);
-                toggleLockState(method === 'PUT');
-            } else {
-                console.error(`Error ${method === 'PUT' ? 'locking' : 'unlocking'} topic`);
-            }
-        })
-        .catch(err => console.error('Fetch error:', err));
-    }
-
-    lockButton?.addEventListener('click', function() { handleFetch('PUT'); });
-    unlockButton?.addEventListener('click', function() { handleFetch('DELETE'); });
-});
-</script>
-
-
-
-
 </div>
+<script>
+function runScript() {
+    $(window).on('ajaxify.end', function() {
+        console.log('Page fully loaded, including dynamic content.');
+
+        const topicId = typeof ajaxify !== 'undefined' ? ajaxify.data.tid : null;
+        console.log('Current topic ID:', topicId);
+
+        if (!topicId) {
+            console.error('Topic ID could not be determined.');
+            return;
+        }
+
+        function handleFetch(method) {
+            const action = method === 'PUT' ? 'lock' : 'unlock';
+            console.log(`Attempting to ${action} the topic with ID: ${topicId}`);
+
+            fetch(`/api/v3/topics/${topicId}/lock`, {
+                method: method,
+                headers: {
+                    'x-csrf-token': config.csrf_token,
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log(`Topic ${action}ed successfully.`);
+                    $(document).trigger('lockStateChange', [method === 'PUT']);
+                } else {
+                    console.error(`Error ${action}ing topic.`);
+                }
+            })
+            .catch(err => console.error('Fetch error:', err));
+        }
+
+        $(document).on('click', '[component="post/lock"]', function() { handleFetch('PUT'); });
+        $(document).on('click', '[component="post/unlock"]', function() { handleFetch('DELETE'); });
+
+        $(document).on('lockStateChange', function(e, isLocked) {
+
+                        const lockButton = $('[component="post/lock"]');
+            const unlockButton = $('[component="post/unlock"]');
+
+            lockButton.css('display', isLocked ? 'none' : 'inline-block');
+            unlockButton.css('display', isLocked ? 'inline-block' : 'none');
+
+        });
+    });
+}
+
+if (typeof $ !== 'undefined') {
+    runScript();
+} else {
+    var checkjQuery = setInterval(function() {
+        if (typeof $ !== 'undefined') {
+            clearInterval(checkjQuery);
+            runScript();
+        }
+    }, 100);
+}
+</script>
