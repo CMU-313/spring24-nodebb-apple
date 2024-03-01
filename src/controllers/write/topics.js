@@ -40,6 +40,30 @@ Topics.reply = async (req, res) => {
         await db.deleteObjectField('locks', id);
     }
 };
+/**
+ * Code instructed and written by ChatGPT
+ * Resolves topic with tid and uid from parameters
+ * @param {Object} req - The request object from Express.js, containing the parameters and user information.
+ * @param {Object} res - The response object from Express.js, used to send back the formatted API response.
+ */
+Topics.resolve = async (req, res) => {
+    // Asserting that req.params and req.uid are of expected types.
+    if (typeof req !== 'object' || typeof res !== 'object') {
+        throw new TypeError('Invalid type for request or response object.');
+    }
+    if (typeof req.params !== 'object' || !req.params.tid || typeof req.params.tid !== 'string') {
+        throw new TypeError('Request parameters are not as expected. "tid" should be a string and not empty.');
+    }
+    if (typeof req.uid !== 'string' && typeof req.uid !== 'number') {
+        throw new TypeError('User ID (uid) must be a string or number.');
+    }
+    // Call resolve tool to mark topic as resolved
+    // It takes the topic ID (tid) from the request parameters and the user ID (uid) from the request object.
+    await topics.tools.resolve(req.params.tid, req.uid);
+    // Send a success response to the client.
+    // It formats the response as per the API's standard, with a 200 OK status code.
+    helpers.formatApiResponse(200, res);
+};
 
 async function lockPosting(req, error) {
     const id = req.uid > 0 ? req.uid : req.sessionID;
