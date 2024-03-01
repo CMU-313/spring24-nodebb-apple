@@ -13,6 +13,7 @@ const privsCategories = require('./categories');
 
 const privsTopics = module.exports;
 
+
 privsTopics.get = async function (tid, uid) {
     uid = parseInt(uid, 10);
 
