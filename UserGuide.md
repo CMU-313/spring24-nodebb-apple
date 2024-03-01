@@ -1,6 +1,7 @@
 User Guide
 
-Resolve topic
+Resolve topic:
+
 A user is able to resolve a topic if they are the owner of that topic, a forum administrator, or a forum moderator. 
 
 All users, including guests, can see whether a topic has been resolved.
