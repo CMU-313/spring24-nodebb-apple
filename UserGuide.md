@@ -1,8 +1,5 @@
 User Guide
 
-Added features: resolve topic, locking topics, instructor endorsement, anonymous posting
-Complete features: resolve topic
-
 Resolve topic
 A user is able to resolve a topic if they are the owner of that topic, a forum administrator, or a forum moderator. 
 
