@@ -28,25 +28,12 @@ module.exports = function (User) {
         'cover:position', 'groupTitle', 'mutedUntil', 'mutedReason',
     ];
     function anonymizePost(post) {
+        // Set a generic username for anonymous posts
         post.username = 'Anonymous';
         post.userslug = 'anonymous';
-        post.userpicture = '';
-        post.uid = -1;
-        post.timestamp = Date.now();
-        post.lastEditTime = Date.now();
-        post.editedBy = 'Anonymous';
-        post.ip = '0.0.0.0';
-        post.email = 'anonymous@example.com';
-        post.status = 'anonymized';
-        post.tags = [];
-        post.category = 'Anonymized';
-        post.upvotes = 0;
-        post.downvotes = 0;
-        post.score = 0;
-        post.comments = [];
-        post.attachments = [];
-        post.isAnonymous = true;
-        return post;
+        post.userpicture = ''; // Consider setting a default anonymous user picture if desired
+        post.uid = -1; // Ensure the UID is set to -1
+
     }
 
     User.guestData = {

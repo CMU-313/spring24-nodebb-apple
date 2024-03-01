@@ -74,7 +74,7 @@ Posts.getPostIndices = async function (posts, uid) {
     if (!Array.isArray(posts) || !posts.length) {
         return [];
     }
-    const settings = await user.getSettings(-1);
+    const settings = await user.getSettings(uid);
 
     const byVotes = settings.topicPostSort === 'most_votes';
     let sets = posts.map(p => (byVotes ? `tid:${p.tid}:posts:votes` : `tid:${p.tid}:posts`));
