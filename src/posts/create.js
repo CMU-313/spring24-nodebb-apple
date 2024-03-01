@@ -45,7 +45,7 @@ module.exports = function (Posts) {
         if (data.ip && meta.config.trackIpPerPost) {
             postData.ip = data.ip;
         }
-        // handle us posting
+        // handle anonymous posting
         if (isAnonymous) {
             postData.handle = 'Anonymous';
         } else if (data.handle && !parseInt(uid, 10)) {

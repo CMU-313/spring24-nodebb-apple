@@ -14,7 +14,6 @@ const privileges = require('../privileges');
 
 module.exports = function (Posts) {
     Posts.getUserInfoForPosts = async function (uids, uid) {
-        alert('Button was pressed!');
         // Filter out the anonymous UID (-1) to bypass processing for anonymously made posts
         uids = uids.filter(uid => uid !== -1);
         const [userData, userSettings, signatureUids] = await Promise.all([
@@ -25,13 +24,6 @@ module.exports = function (Posts) {
         const uidsSignatureSet = new Set(signatureUids.map(uid => parseInt(uid, 10)));
         const groupsMap = await getGroupsMap(userData);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var myButton = document.getElementById('myButton');
-            myButton.addEventListener('click', function() {
-                // Place your code here to do what you want when the button is clicked
-                alert('Button was pressed!');
-            });
-        });
         userData.forEach((userData, index) => {
             if (userData.uid === -1) {
                 // Call helper function to anonymize user data if the post is anonymous
