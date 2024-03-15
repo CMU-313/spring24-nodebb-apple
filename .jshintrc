@@ -1,0 +1,25 @@
+// Generated with help of GPT4 with query "jshint config for NodeBB"
+// If we want to make our own rules we will modify this here
+{
+    "node": true,
+    "browser": true,
+    "esversion": 9,
+    "globals": {
+      "define": true,
+      "require": true,
+      "module": true,
+      "Promise": true
+    },
+    "curly": true,
+    "undef": true,
+    "unused": true,
+    "eqeqeq": true,
+    "varstmt": false,
+    "strict": "global",
+    "laxbreak": true,
+    "laxcomma": true,
+    "expr": true,
+    "onevar": false,
+    "quotmark": "single"
+  }
+  
