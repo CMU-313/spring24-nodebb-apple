@@ -83,3 +83,6 @@ theme/.idea
 theme/.vscode
 theme/node_modules/
 src/privileges/categories.ts
+
+# stryker temp files
+.stryker-tmp
