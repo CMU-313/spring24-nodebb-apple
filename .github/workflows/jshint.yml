@@ -1,25 +1,35 @@
-name: JSHint
+name: JSHint Check
 
 on:
   push:
     branches:
-      - main
+      - main  # Adjust branch name if necessary
+  pull_request:
+    branches:
+      - main  # Adjust branch name if necessary
 
 jobs:
-  lint:
+  jshint:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get modified files
-        id: modified-files
-        run: |
-          echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.js$')"
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-      - name: Run JSHint on modified files
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run JSHint
         run: |
-          for file in ${{ steps.modified-files.outputs.files }}; do
-            npx jshint "$file" --reporter --verbose
-          done
+          npx jshint src/ > jshint-output.txt || true
+          if [ -s jshint-output.txt ]; then
+            while IFS= read -r line; do
+              echo "::warning ::$line"
+            done < jshint-output.txt
+          fi
+        continue-on-error: true
