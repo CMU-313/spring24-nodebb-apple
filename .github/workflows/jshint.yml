@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - JSHint-testing
 
 jobs:
   lint:
