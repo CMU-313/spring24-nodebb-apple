@@ -5,9 +5,7 @@ const plugins = require('../plugins');
 
 module.exports = function (Posts) {
     Posts.bookmark = async function (pid, uid) {
-        // Added this to test failure of linting right here
-        // Remove double quotes when done.
-        return await toggleBookmark("bookmark", pid, uid);
+        return await toggleBookmark('bookmark', pid, uid);
     };
 
     Posts.unbookmark = async function (pid, uid) {
