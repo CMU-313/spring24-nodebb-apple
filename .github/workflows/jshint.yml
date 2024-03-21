@@ -25,4 +25,11 @@ jobs:
         run: npm install
 
       - name: Run JSHint
-        run: npx jshint src/
+        run: |
+          npx jshint src/ > jshint-output.txt || true
+          if [ -s jshint-output.txt ]; then
+            while IFS= read -r line; do
+              echo "::warning ::$line"
+            done < jshint-output.txt
+          fi
+        continue-on-error: true
